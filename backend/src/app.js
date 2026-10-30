@@ -1,3 +1,4 @@
+
 import express from "express";
 import cors from "cors";
 
@@ -8,15 +9,14 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173"
+    origin: [
+      "http://localhost:5173",
+      process.env.FRONTEND_URL
+    ].filter(Boolean)
   })
 );
 
-app.use(
-  express.json({
-    limit: "10mb"
-  })
-);
+app.use(express.json({ limit: "10mb" }));
 
 app.use(
   express.urlencoded({
@@ -24,19 +24,18 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
+// API health check
+app.get("/api/health", (req, res) => {
   res.json({
     success: true,
-    message:
-      "Recursive Text Drilling API is running"
+    message: "Recursive Text Drilling API is running"
   });
 });
 
-app.use(
-  "/api/documents",
-  documentRoutes
-);
+// Document routes
+app.use("/api/documents", documentRoutes);
 
+// Error handler
 app.use(errorHandler);
 
 export default app;

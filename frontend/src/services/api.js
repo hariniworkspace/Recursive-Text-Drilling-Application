@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL ||
-  "http://localhost:5000/api";
+  import.meta.env.VITE_API_URL || "/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -11,20 +10,6 @@ const api = axios.create({
   },
 });
 
-
-/*
- * ==========================================
- * UPLOAD DOCUMENTS
- * ==========================================
- *
- * Sends one or multiple JSON files.
- *
- * Backend:
- * POST /api/documents/upload
- *
- * Form field:
- * files
- */
 export async function uploadDocuments(files) {
   if (!files || files.length === 0) {
     throw new Error("Please select at least one JSON file.");
@@ -44,15 +29,6 @@ export async function uploadDocuments(files) {
   return response.data.documents || [];
 }
 
-
-/*
- * ==========================================
- * LOAD ALL DOCUMENTS
- * ==========================================
- *
- * Backend:
- * GET /api/documents
- */
 export async function loadDocuments() {
   const response = await api.get(
     "/documents"
@@ -61,15 +37,6 @@ export async function loadDocuments() {
   return response.data.documents || [];
 }
 
-
-/*
- * ==========================================
- * GET SINGLE DOCUMENT
- * ==========================================
- *
- * Backend:
- * GET /api/documents/:id
- */
 export async function getDocument(id) {
   const response = await api.get(
     `/documents/${id}`
@@ -78,40 +45,6 @@ export async function getDocument(id) {
   return response.data.document;
 }
 
-
-/*
- * ==========================================
- * DRILL DOCUMENT
- * ==========================================
- *
- * Levels:
- *
- * line
- * word
- * character
- *
- * Examples:
- *
- * drillDocument(id, {
- *   level: "line",
- *   delimiter: "newline"
- * });
- *
- *
- * drillDocument(id, {
- *   level: "word",
- *   parentValue: "Hello"
- * });
- *
- *
- * drillDocument(id, {
- *   level: "character",
- *   parentValue: "Hello"
- * });
- *
- * Backend:
- * GET /api/documents/:id/drill
- */
 export async function drillDocument(
   id,
   {
@@ -140,36 +73,10 @@ export async function drillDocument(
     }
   );
 
-  /*
-   * Backend response:
-   *
-   * {
-   *   success: true,
-   *   document: {...},
-   *   level: "line",
-   *   delimiter: "newline",
-   *   nodes: [...]
-   * }
-   */
 
   return response.data;
 }
 
-
-/*
- * ==========================================
- * MUTATE DOCUMENT
- * ==========================================
- *
- * Supported actions:
- *
- * insert
- * delete
- * reorder
- *
- * Backend:
- * POST /api/documents/:id/operation
- */
 export async function mutateDocument(
   id,
   operation
@@ -183,14 +90,6 @@ export async function mutateDocument(
 }
 
 
-/*
- * ==========================================
- * UPDATE DOCUMENT
- * ==========================================
- *
- * Backend:
- * PUT /api/documents/:id
- */
 export async function updateDocument(
   id,
   paragraph,
@@ -208,14 +107,6 @@ export async function updateDocument(
 }
 
 
-/*
- * ==========================================
- * DELETE DOCUMENT
- * ==========================================
- *
- * Backend:
- * DELETE /api/documents/:id
- */
 export async function deleteDocument(id) {
   const response = await api.delete(
     `/documents/${id}`
@@ -225,14 +116,6 @@ export async function deleteDocument(id) {
 }
 
 
-/*
- * ==========================================
- * ERROR HELPER
- * ==========================================
- *
- * Converts Axios errors into a
- * consistent message.
- */
 export function getApiErrorMessage(
   error,
   fallback = "Something went wrong"
@@ -244,11 +127,5 @@ export function getApiErrorMessage(
   );
 }
 
-
-/*
- * ==========================================
- * AXIOS INSTANCE
- * ==========================================
- */
 
 export default api;
